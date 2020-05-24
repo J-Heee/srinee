@@ -2,12 +2,27 @@ package com.mashup.srinee.daylog.controller;
 
 
 import com.mashup.srinee.daylog.dto.TestDTO;
+import com.mashup.srinee.daylog.service.DayLogService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+// Request 가 올 때마다 객체 생성은 너무 비효율적이다
+// 그래서 딱 한번만 생성해서 전체적으로 같이 쓰자 하나로
+// ==> Singleton
 @RequestMapping(value = "/daylog")
 @RestController
 public class DayLogController {
+
+
+//    @Autowired
+//    private DayLogService dayLogService;
+
+    private final DayLogService dayLogService;
+
+    public DayLogController(DayLogService dayLogService) {
+         this.dayLogService = dayLogService;
+    }
 
     // URL :  Mapping http://localhost:8080/daylog/main
     // Return is Not Page, Just String value
@@ -45,6 +60,11 @@ public class DayLogController {
     @PostMapping("/id-json")
     public TestDTO idJson(@RequestBody TestDTO testDTO) {
         return testDTO;
+    }
+
+    @GetMapping("/getDayLog")
+    public String getDayLog() {
+        return dayLogService.makeDayLog();
     }
 
 }
